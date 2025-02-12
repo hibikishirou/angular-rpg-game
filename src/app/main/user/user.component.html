@@ -1,0 +1,46 @@
+<div *ngIf="isLogin; else loginForm">
+  <mat-card class="w-300 flex justify-center p-4">
+    <mat-card-title class="text-center pb-6"> User</mat-card-title>
+    <mat-card-content>
+      <mat-label>Username:</mat-label>
+      <mat-label>{{ user?.username }}</mat-label>
+    </mat-card-content>
+    <mat-card-footer>
+      <div class="flex flex-row gap-6 justify-center">
+        <button type="primary" mat-raised-button (click)="logout()">Logout</button>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+</div>
+<ng-template #loginForm>
+  <form [formGroup]="userForm">
+    <mat-card class="w-300 flex justify-center p-4">
+      <mat-card-title class="text-center pb-6"> Login </mat-card-title>
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" />
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="flex flex-row gap-6 justify-center">
+          <button
+            type="submit"
+            type="primary"
+            mat-flat-button
+            (click)="login()"
+          >
+            Login
+          </button>
+          <button type="primary" mat-raised-button>Register</button>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+</ng-template>

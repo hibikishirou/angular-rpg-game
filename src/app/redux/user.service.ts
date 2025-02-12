@@ -24,8 +24,10 @@ export class UserService {
   }
 
   saveUser(user: User) {
-    const { password, ...displayUser } = user;
-    this.user$.next(displayUser);
+    if (user) {
+      const { password, ...displayUser } = user;
+      this.user$.next(displayUser);
+    }
   }
   clearUser() {
     this.user$.next(null);

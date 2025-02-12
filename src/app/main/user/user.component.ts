@@ -23,15 +23,23 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrl: './user.component.scss',
 })
 export class UserComponent extends DestroyComponent {
-  isLogin: boolean = false;
+  isLogin = false;
+  isRegister = false;
   user: DisplayUser | null = null;
+  error: string = '';
   userForm: FormGroup = new FormGroup({
     username: new FormControl(),
     password: new FormControl(),
   });
+  userRegisterForm: FormGroup = new FormGroup({
+    username: new FormControl(),
+    password: new FormControl(),
+    verifyPassword: new FormControl(),
+  });
   constructor(private readonly userSerive: UserService) {
     super();
     this.checkLogin();
+    this.checkError();
   }
 
   checkLogin() {
@@ -41,21 +49,57 @@ export class UserComponent extends DestroyComponent {
       .subscribe({
         next: (value) => {
           if (!value) {
-            this.isLogin = false;
             return;
           }
-          this.isLogin = true;
           this.user = value;
+        },
+      });
+
+    this.userSerive
+      .checkLogin()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (val) => {
+          this.isLogin = val;
+        },
+      });
+  }
+
+  checkError() {
+    this.userSerive
+      .getUserError()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (error) => {
+          this.error = error;
         },
       });
   }
 
   login() {
     const { username, password } = this.userForm.getRawValue();
-    const user = this.userSerive.checkUser(username, password);
-    if (user) {
-      this.userSerive.saveUser(user);
-    }
+    this.userSerive.checkUserLogin(username, password).subscribe({
+      next: (result) => {
+        if (result) {
+          this.userForm.reset();
+        }
+      },
+      error: (err) => {},
+    });
+  }
+
+  register() {
+    const { username, password, verifyPassword } =
+      this.userRegisterForm.getRawValue();
+    this.userSerive.registerUser(username, password, verifyPassword).subscribe({
+      next: (result) => {
+        if (result) {
+          this.userRegisterForm.reset();
+          this.isRegister = false;
+        }
+      },
+      error: (err) => {},
+    });
   }
 
   logout() {

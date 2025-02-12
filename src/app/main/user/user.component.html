@@ -7,13 +7,15 @@
     </mat-card-content>
     <mat-card-footer>
       <div class="flex flex-row gap-6 justify-center">
-        <button type="primary" mat-raised-button (click)="logout()">Logout</button>
+        <button type="primary" mat-raised-button (click)="logout()">
+          Logout
+        </button>
       </div>
     </mat-card-footer>
   </mat-card>
 </div>
 <ng-template #loginForm>
-  <form [formGroup]="userForm">
+  <form *ngIf="!isRegister; else registerForm" [formGroup]="userForm">
     <mat-card class="w-300 flex justify-center p-4">
       <mat-card-title class="text-center pb-6"> Login </mat-card-title>
       <mat-card-content>
@@ -27,6 +29,7 @@
             <input matInput formControlName="password" type="password" />
           </mat-form-field>
         </div>
+        <mat-error *ngIf="error">{{ error }}</mat-error>
       </mat-card-content>
       <mat-card-footer>
         <div class="flex flex-row gap-6 justify-center">
@@ -38,7 +41,49 @@
           >
             Login
           </button>
-          <button type="primary" mat-raised-button>Register</button>
+          <button type="primary" mat-raised-button (click)="isRegister = true">
+            Register
+          </button>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </form>
+</ng-template>
+
+<ng-template #registerForm>
+  <form [formGroup]="userRegisterForm">
+    <mat-card class="w-300 flex justify-center p-4">
+      <mat-card-title class="text-center pb-6"> Login </mat-card-title>
+      <mat-card-content>
+        <div class="flex flex-col gap-4">
+          <mat-form-field>
+            <mat-label>Username</mat-label>
+            <input matInput formControlName="username" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Password</mat-label>
+            <input matInput formControlName="password" type="password" />
+          </mat-form-field>
+          <mat-form-field>
+            <mat-label>Verifty Password</mat-label>
+            <input matInput formControlName="verifyPassword" type="password" />
+          </mat-form-field>
+        </div>
+        <mat-error *ngIf="error">{{ error }}</mat-error>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="flex flex-row gap-6 justify-center">
+          <button
+            type="submit"
+            type="primary"
+            mat-flat-button
+            (click)="register()"
+          >
+            Register
+          </button>
+          <button type="primary" mat-raised-button (click)="isRegister = false">
+            Cancel
+          </button>
         </div>
       </mat-card-footer>
     </mat-card>

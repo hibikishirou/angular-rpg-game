@@ -13,6 +13,7 @@ import {
   switchAll,
   takeUntil,
 } from 'rxjs';
+import { CharacterService } from './character.service';
 
 @Injectable({
   providedIn: 'root',
@@ -20,7 +21,10 @@ import {
 export class StoreService implements OnDestroy {
   private readonly store$: BehaviorSubject<any> = new BehaviorSubject<any>({});
   private readonly destroy$: Subject<any> = new Subject();
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly characterService: CharacterService
+  ) {}
 
   ngOnDestroy(): void {
     this.destroy$.next(null);
@@ -30,8 +34,9 @@ export class StoreService implements OnDestroy {
     const storeData = localStorage.getItem('store');
     const store = storeData ? JSON.parse(storeData) : {};
     this.store$.next(store);
-    const { user } = store;
+    const { user, character } = store;
     this.userService.saveUser(user);
+    this.characterService.saveCharacter(character);
   }
   handleStore() {
     this.store$.pipe(skip(1), takeUntil(this.destroy$)).subscribe({
@@ -44,11 +49,12 @@ export class StoreService implements OnDestroy {
     });
   }
   storeManagement() {
-    combineLatest([this.userService.getUser()])
+    combineLatest([this.userService.getUser(), this.characterService.getCharacter()])
       .pipe(
-        map(([user]) => {
+        map(([user, character]) => {
           return {
             user,
+            character
           };
         }),
         takeUntil(this.destroy$)

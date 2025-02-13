@@ -1,5 +1,5 @@
 <div *ngIf="isLogin; else loginForm">
-  <mat-card class="w-300 flex justify-center p-4">
+  <mat-card class="w-100 flex justify-center p-4">
     <mat-card-title class="text-center pb-6"> User</mat-card-title>
     <mat-card-content>
       <mat-label>Username:</mat-label>
@@ -16,7 +16,7 @@
 </div>
 <ng-template #loginForm>
   <form *ngIf="!isRegister; else registerForm" [formGroup]="userForm">
-    <mat-card class="w-300 flex justify-center p-4">
+    <mat-card class="w-100 flex justify-center p-4">
       <mat-card-title class="text-center pb-6"> Login </mat-card-title>
       <mat-card-content>
         <div class="flex flex-col gap-4">

@@ -1,7 +1,4 @@
 <app-menu></app-menu>
-<div class="container flex justify-center w-full m-auto">
-  <div *ngIf="checkLogin() | async">
-    <app-character></app-character>
-  </div>
+<div class="container flex justify-center items-center w-full h-full m-auto">
   <router-outlet> </router-outlet>
 </div>

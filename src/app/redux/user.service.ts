@@ -1,14 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import {
-  BehaviorSubject,
-  map,
-  Subject,
-  takeUntil,
-} from 'rxjs';
+import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
 import User, { DisplayUser } from '../model/User';
 import { IndexDBService } from '../core/index-db.service';
 
-const StoreName = 'user';
+const UserStoreName = 'user';
 @Injectable({
   providedIn: 'root',
 })
@@ -36,7 +31,7 @@ export class UserService implements OnDestroy {
   }
 
   getUserList() {
-    return this.idbService.getDb(StoreName) as User[];
+    return this.idbService.getDb(UserStoreName) as User[];
   }
 
   checkLogin() {
@@ -60,7 +55,7 @@ export class UserService implements OnDestroy {
     return this.checkUser(username).pipe(
       map((result) => {
         if (result && password === verifyPassword) {
-          this.idbService.addDb(StoreName, { username, password });
+          this.idbService.addDb(UserStoreName, { username, password });
           return true;
         } else {
           if (password !== verifyPassword) {
@@ -75,7 +70,7 @@ export class UserService implements OnDestroy {
   }
 
   checkUser(username: string) {
-    return this.idbService.getByIndex(StoreName, 'username', username).pipe(
+    return this.idbService.getByIndex(UserStoreName, 'username', username).pipe(
       map((user) => {
         return !user;
       }),
@@ -84,7 +79,7 @@ export class UserService implements OnDestroy {
   }
 
   checkUserLogin(username: string, password: string) {
-    return this.idbService.getByIndex(StoreName, 'username', username).pipe(
+    return this.idbService.getByIndex(UserStoreName, 'username', username).pipe(
       map((user) => {
         const uPassword = (user as User).password;
         if (uPassword === password) {

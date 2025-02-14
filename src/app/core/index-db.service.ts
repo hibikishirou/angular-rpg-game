@@ -15,38 +15,22 @@ export class IndexDBService implements OnDestroy {
   }
 
   addDb(storeName: string, data: any) {
-    this.dbService
-      .add(storeName, data)
-      .pipe(take(1))
-      .subscribe({
-        next: (key) => {
-          console.log('add success key:', key);
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
+    return this.dbService.add(storeName, data).pipe(take(1));
   }
 
-  getDb(storeName: string): any[] {
-    let data: any[] = [];
-    this.dbService
-      .getAll(storeName)
-      .pipe(take(1))
-      .subscribe({
-        next: (dbData) => {
-          console.log(storeName);
-          console.log(data);
-          data = dbData;
-        },
-        error: (err) => {
-          console.log(err);
-        },
-      });
-    return data;
+  updateDb(storeName: string, data: any) {
+    return this.dbService.update(storeName, data).pipe(take(1));
+  }
+
+  deleteDb(storeName: string, id: number) {
+    return this.dbService.delete(storeName, id).pipe(take(1));
+  }
+
+  getDb(storeName: string) {
+    return this.dbService.getAll(storeName).pipe(take(1));
   }
 
   getByIndex(storeName: string, indexName: string, key: any) {
-    return this.dbService.getByIndex(storeName, indexName, key);
+    return this.dbService.getByIndex(storeName, indexName, key).pipe(take(1));
   }
 }

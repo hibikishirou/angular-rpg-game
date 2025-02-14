@@ -7,7 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { DestroyComponent } from '../../core/destroy/destroy.component';
 import { CharacterService } from '../../redux/character.service';
 import { UserService } from '../../redux/user.service';
-import { takeUntil } from 'rxjs';
+import { take, takeUntil } from 'rxjs';
 import { Character } from '../../model/Character';
 import {
   FormControl,
@@ -16,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { CharacterDetailComponent } from './character-detail/character-detail.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-character',
@@ -34,11 +35,11 @@ import { CharacterDetailComponent } from './character-detail/character-detail.co
 })
 export class CharacterComponent extends DestroyComponent {
   currentCharacter: Character | null = null;
-  tempCharacter: Partial<Character> | null = null;
+  tempCharacter: Character | null = null;
   nameControl: FormControl = new FormControl('', [Validators.required]);
   constructor(
-    private readonly userService: UserService,
-    private readonly characterService: CharacterService
+    private readonly characterService: CharacterService,
+    private router: Router
   ) {
     super();
     this.getCharacter();
@@ -63,5 +64,28 @@ export class CharacterComponent extends DestroyComponent {
     }
   }
 
-  saveCharacter() {}
+  saveCharacter() {
+    if (this.tempCharacter) {
+      this.characterService
+        .saveCharacter(this.tempCharacter)
+        .pipe(take(1))
+        .subscribe({
+          next: (result) => {},
+        });
+    }
+  }
+  deleteCharacter() {
+    if (!this.currentCharacter) {
+      return;
+    }
+    this.characterService
+      .deleteCharacter(this.currentCharacter)
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {},
+      });
+  }
+  playCharacter() {
+    this.router.navigate(['/']);
+  }
 }

@@ -1,5 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { BehaviorSubject, map, Subject, takeUntil } from 'rxjs';
+import {
+  BehaviorSubject,
+  map,
+  of,
+  Subject,
+  switchMap,
+  takeUntil,
+  throwError,
+} from 'rxjs';
 import User, { DisplayUser } from '../model/User';
 import { IndexDBService } from '../core/index-db.service';
 
@@ -30,10 +38,6 @@ export class UserService implements OnDestroy {
     return this.error$.asObservable();
   }
 
-  getUserList() {
-    return this.idbService.getDb(UserStoreName) as User[];
-  }
-
   checkLogin() {
     return this.isLogin$.asObservable();
   }
@@ -53,17 +57,16 @@ export class UserService implements OnDestroy {
 
   registerUser(username: string, password: string, verifyPassword: string) {
     return this.checkUser(username).pipe(
-      map((result) => {
+      switchMap((result) => {
         if (result && password === verifyPassword) {
-          this.idbService.addDb(UserStoreName, { username, password });
-          return true;
+          return this.idbService.addDb(UserStoreName, { username, password });
         } else {
           if (password !== verifyPassword) {
             this.error$.next('Wrong Verify Password');
-            return false;
+            return throwError(false);
           }
           this.error$.next('Exits User');
-          return false;
+          return throwError(false);
         }
       })
     );
@@ -80,14 +83,14 @@ export class UserService implements OnDestroy {
 
   checkUserLogin(username: string, password: string) {
     return this.idbService.getByIndex(UserStoreName, 'username', username).pipe(
-      map((user) => {
+      switchMap((user) => {
         const uPassword = (user as User).password;
         if (uPassword === password) {
           this.saveUser(user as User);
-          return true;
+          return of(true);
         } else {
           this.error$.next('Not exits user');
-          return false;
+          return throwError(false);
         }
       }),
       takeUntil(this.destroy$)

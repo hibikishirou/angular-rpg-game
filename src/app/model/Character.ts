@@ -1,7 +1,7 @@
 export type Character = {
-  id: number;
+  id?: number;
   name: string;
-  userId: number;
+  userId?: number;
   roleId: number;
   level: number;
   exp: number;
@@ -12,7 +12,7 @@ export type Character = {
   luck: number;
 };
 
-export type TempCharacter = Partial<Character>;
+// export type TempCharacter = Omit<Character, 'id' | 'userId'>;
 
 export type Role = {
   id: number;

@@ -1,10 +1,4 @@
-export type Character = {
-  id?: number;
-  name: string;
-  userId?: number;
-  roleId: number;
-  level: number;
-  exp: number;
+export type Stat = {
   str: number;
   int: number;
   agi: number;
@@ -12,7 +6,23 @@ export type Character = {
   luck: number;
 };
 
-// export type TempCharacter = Omit<Character, 'id' | 'userId'>;
+export type Character = {
+  id?: number;
+  name: string;
+  userId?: number;
+  roleId: number;
+  level: number;
+  exp: number;
+} & Stat;
+
+export type MapCharacter = {
+  hp: number;
+  maxHp: number;
+  mp: number;
+  maxMp: number;
+  stamina: number;
+  maxStamina: number;
+} & Character;
 
 export type Role = {
   id: number;

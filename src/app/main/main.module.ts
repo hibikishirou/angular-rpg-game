@@ -5,12 +5,17 @@ import { MainComponent } from './main/main.component';
 import { UserComponent } from './user/user.component';
 import { CharacterComponent } from './character/character.component';
 import { AuthGuard } from '../core/guard/auth-guard.guard';
+import { MapComponent } from './map/map.component';
 
 const routes: Routes = [
   {
     path: '',
     component: MainComponent,
     children: [
+      {
+        path: 'map',
+        component: MapComponent,
+      },
       {
         path: 'user',
         component: UserComponent,

@@ -1,5 +1,7 @@
 import { Role } from '../model/Character';
 
+export const StatList = ['str', 'int', 'agi', 'vit', 'luck'];
+
 export const RoleConfig: Role[] = [
   {
     id: 1,

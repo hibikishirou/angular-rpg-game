@@ -1,6 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import {
   BehaviorSubject,
+  combineLatest,
+  distinctUntilChanged,
   of,
   Subject,
   switchMap,
@@ -9,13 +11,14 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-import { Character } from '../model/Character';
-import { RoleConfig } from '../constant/roleConfig';
+import { Character, Stat } from '../model/Character';
+import { RoleConfig, StatList } from '../constant/roleConfig';
 import { UserService } from './user.service';
-import User, { DisplayUser } from '../model/User';
+import { DisplayUser } from '../model/User';
 import { IndexDBService } from '../core/index-db.service';
 
 const CharacterStoreName = 'character';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -24,7 +27,8 @@ export class CharacterService implements OnDestroy {
   private readonly character$: BehaviorSubject<Character | null> =
     new BehaviorSubject<Character | null>(null);
   private readonly destroy$ = new Subject();
-
+  private readonly levelUpStat$: BehaviorSubject<Stat> =
+    new BehaviorSubject<Stat>({ str: 0, int: 0, vit: 0, agi: 0, luck: 0 });
   constructor(
     private readonly userService: UserService,
     private readonly indexDbService: IndexDBService
@@ -46,6 +50,20 @@ export class CharacterService implements OnDestroy {
           this.currentUser = user;
           this.getCharacterList();
         },
+      });
+    this.character$
+      .pipe(
+        takeUntil(this.destroy$),
+        distinctUntilChanged(),
+        switchMap((character) => {
+          if (character) {
+            return this.saveCharacter(character);
+          }
+          return of(null);
+        })
+      )
+      .subscribe({
+        next: (result) => {},
       });
   }
 
@@ -98,7 +116,6 @@ export class CharacterService implements OnDestroy {
       return this.indexDbService.deleteDb(CharacterStoreName, id).pipe(
         take(1),
         switchMap((result) => {
-          console.log(result);
           if (result) {
             this.character$.next(null);
             return of(true);
@@ -111,7 +128,7 @@ export class CharacterService implements OnDestroy {
     }
   }
 
-  gerRoleList() {
+  getRoleList() {
     return RoleConfig;
   }
 
@@ -129,9 +146,62 @@ export class CharacterService implements OnDestroy {
       });
   }
 
+  receiveExp(exp: number) {
+    this.character$.pipe(take(1)).subscribe((character) => {
+      if (!character) {
+        console.log('not found character');
+        return;
+      }
+      const { exp: charExp, roleId } = character;
+      if (charExp + exp < 100) {
+        this.character$.next({
+          ...character,
+          exp: charExp + exp,
+        });
+      } else {
+        const newStat = this.randomLevel(roleId);
+        if (!newStat) {
+          console.log('error level up');
+          return;
+        }
+        this.character$.next({
+          ...character,
+          level: character.level + 1,
+          exp: 0,
+          str: character.str + newStat.str,
+          int: character.int + newStat.int,
+          agi: character.agi + newStat.agi,
+          vit: character.vit + newStat.vit,
+          luck: character.luck + newStat.luck,
+        });
+        this.levelUpStat$.next(newStat);
+      }
+    });
+  }
+
   randomStat(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
-  randomLevel(roleId: number) {}
+  randomLevel(roleId: number): Stat | void {
+    const currentRole = this.getRoleList().filter((item) => item.id === roleId);
+    if (!currentRole.length) {
+      console.log('not found role');
+      return;
+    }
+    const rateList: Stat = {
+      str: currentRole[0].rateStr,
+      int: currentRole[0].rateInt,
+      agi: currentRole[0].rateAgi,
+      vit: currentRole[0].rateVit,
+      luck: currentRole[0].rateLuck,
+    };
+    return StatList.reduce((data, key: string) => {
+      const rate = rateList[key as keyof Stat];
+      return {
+        [key]: Math.random() < rate ? 0 : 1,
+        ...data,
+      };
+    }, {} as Stat);
+  }
 }

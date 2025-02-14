@@ -9,16 +9,13 @@ import { Character } from '../../../model/Character';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { CharacterService } from '../../../redux/character.service';
 import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { RoleDisplayPipe } from '../../../core/pipe/role-display.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { HpDisplayPipe } from '../../../core/pipe/hp-display.pipe';
-import { MpDisplayPipe } from '../../../core/pipe/mp-display.pipe';
-import { StaminaDisplayPipe } from '../../../core/pipe/stamina-display.pipe';
 import Caculator from '../../../constant/caculator';
+import { StatList } from '../../../constant/roleConfig';
 @Component({
   selector: 'app-character-detail',
   imports: [
@@ -27,9 +24,6 @@ import Caculator from '../../../constant/caculator';
     MatSelectModule,
     NgApexchartsModule,
     RoleDisplayPipe,
-    HpDisplayPipe,
-    MpDisplayPipe,
-    StaminaDisplayPipe,
     MatButtonModule,
     MatProgressBarModule,
     MatTooltipModule,
@@ -43,15 +37,14 @@ export class CharacterDetailComponent implements OnChanges {
   @ViewChild('chart') chart?: ChartComponent;
   chartOptions: any;
   caculator = Caculator;
-  readonly statList: string[] = ['str', 'int', 'agi', 'vit', 'luck'];
 
-  constructor(private readonly characterService: CharacterService) {}
+  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.initChart();
   }
   getCharaterStatData() {
-    return this.statList.map(
+    return StatList.map(
       (key: string) =>
         (this.detail && this.detail?.[key as keyof Character]) || 0
     );
@@ -73,7 +66,7 @@ export class CharacterDetailComponent implements OnChanges {
         text: 'Charater Stats',
       },
       xaxis: {
-        categories: ['str', 'int', 'agi', 'vit', 'luck'],
+        categories: StatList,
       },
     };
   }

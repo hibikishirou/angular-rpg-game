@@ -1,0 +1,62 @@
+<div class="absolute bottom-6 left-6 opacity-50 hover:opacity-100">
+  <mat-card>
+    <div
+      class="w-100 p-4 flex flex-col gap-2"
+      *ngIf="getMapCharacter() | async; let character"
+    >
+      <div>
+        Name: <span>{{ character?.name }}</span>
+      </div>
+      <span class="grid grid-cols-2 gap-4">
+        <span>
+          Role: <span>{{ character?.roleId | roleDisplay }}</span>
+        </span>
+        <span>Level: {{ character?.level }}</span>
+      </span>
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <span class="flex flex-row justify-between">
+          <span>Exp:</span> <span>{{ character?.exp }}/100</span>
+        </span>
+        <mat-progress-bar
+          mode="determinate"
+          color="primary"
+          [value]="character?.exp"
+          [bufferValue]="100"
+        ></mat-progress-bar>
+      </div>
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <span class="flex flex-row justify-between">
+          <span>Hp:</span>
+          <span>{{ character?.hp }}/{{ character?.maxHp }}</span>
+        </span>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="character?.hp"
+          [bufferValue]="character?.maxHp"
+        ></mat-progress-bar>
+      </div>
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <span class="flex flex-row justify-between">
+          <span>Mp:</span>
+          <span>{{ character?.mp }}/{{ character?.maxMp }}</span>
+        </span>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="character?.mp"
+          [bufferValue]="character?.maxMp"
+        ></mat-progress-bar>
+      </div>
+      <div class="grid grid-cols-2 gap-4 items-center">
+        <span class="flex flex-row justify-between">
+          <span>Stamina:</span>
+          <span>{{ character?.stamina }}/{{ character?.maxStamina }}</span>
+        </span>
+        <mat-progress-bar
+          mode="determinate"
+          [value]="character?.stamina"
+          [bufferValue]="character?.maxStamina"
+        ></mat-progress-bar>
+      </div>
+    </div>
+  </mat-card>
+</div>

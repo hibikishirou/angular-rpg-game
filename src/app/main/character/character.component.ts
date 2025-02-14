@@ -86,6 +86,6 @@ export class CharacterComponent extends DestroyComponent {
       });
   }
   playCharacter() {
-    this.router.navigate(['/']);
+    this.router.navigate(['/map']);
   }
 }

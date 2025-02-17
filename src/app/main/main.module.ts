@@ -6,6 +6,7 @@ import { UserComponent } from './user/user.component';
 import { CharacterComponent } from './character/character.component';
 import { AuthGuard } from '../core/guard/auth-guard.guard';
 import { MapComponent } from './map/map.component';
+import { CharacterGuard } from '../core/guard/character-guard.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
       {
         path: 'map',
         component: MapComponent,
+        canActivate: [AuthGuard, CharacterGuard],
       },
       {
         path: 'user',

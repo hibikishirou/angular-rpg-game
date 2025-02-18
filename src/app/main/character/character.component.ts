@@ -1,12 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DestroyComponent } from '../../core/destroy/destroy.component';
 import { CharacterService } from '../../redux/character.service';
-import { take, takeUntil } from 'rxjs';
+import {
+  distinctUntilChanged,
+  of,
+  switchMap,
+  take,
+  takeUntil,
+  throwError,
+} from 'rxjs';
 import { Character } from '../../model/Character';
 import {
   FormControl,
@@ -33,11 +45,12 @@ import { Router } from '@angular/router';
   styleUrl: './character.component.scss',
 })
 export class CharacterComponent extends DestroyComponent {
-  currentCharacter: Character | Partial<Character> = {};
+  currentCharacter: Character | Partial<Character> | null = null;
   tempCharacter: Character | Partial<Character> = {};
   nameControl: FormControl = new FormControl('', [Validators.required]);
   constructor(
     private readonly characterService: CharacterService,
+    private changeDetectorRef: ChangeDetectorRef,
     private router: Router
   ) {
     super();
@@ -50,7 +63,8 @@ export class CharacterComponent extends DestroyComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (character) => {
-          this.currentCharacter = character as Character;
+          this.currentCharacter = character;
+          this.changeDetectorRef.markForCheck();
         },
       });
   }
@@ -71,7 +85,10 @@ export class CharacterComponent extends DestroyComponent {
       .saveCharacter(this.tempCharacter as Character)
       .pipe(take(1))
       .subscribe({
-        next: (result) => {},
+        next: (result) => {
+          this.tempCharacter = {};
+          this.nameControl.reset();
+        },
       });
   }
   deleteCharacter() {

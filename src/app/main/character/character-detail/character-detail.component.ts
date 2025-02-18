@@ -9,7 +9,7 @@ import { Character } from '../../../model/Character';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
-import { ChartComponent, NgApexchartsModule, ApexOptions } from 'ng-apexcharts';
+import { ChartComponent, NgApexchartsModule } from 'ng-apexcharts';
 import { RoleDisplayPipe } from '../../../core/pipe/role-display.pipe';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -33,7 +33,7 @@ import { StatList } from '../../../constant/roleConfig';
 })
 export class CharacterDetailComponent implements OnChanges {
   @Input()
-  detail: Partial<Character> = {};
+  detail: Partial<Character> | null = {};
   @ViewChild('chart') chart?: ChartComponent;
   chartOptions: any = {};
   caculator = Caculator;

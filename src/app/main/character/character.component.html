@@ -1,12 +1,7 @@
 <mat-card class="w-full flex justify-center p-4">
   <mat-card-title class="text-center pb-6"> Character </mat-card-title>
   <mat-card-content>
-    <div
-      *ngIf="
-        currentCharacter && currentCharacter.id;
-        else createNewCharaterForm
-      "
-    >
+    <div *ngIf="currentCharacter && currentCharacter.id; else createNewCharaterForm">
       <app-character-detail [detail]="currentCharacter"></app-character-detail>
       <div class="flex flex-row justify-center p-4 gap-4">
         <button mat-flat-button (click)="playCharacter()">

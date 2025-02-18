@@ -3,30 +3,30 @@
     <div class="flex flex-row gap-6 justify-center items-center">
       <div class="flex flex-col gap-2 w-50">
         <mat-label>
-          Name: <span>{{ detail.name }}</span>
+          Name: <span>{{ detail?.name }}</span>
         </mat-label>
         <mat-label>
-          Role: <span>{{ detail.roleId | roleDisplay }}</span>
+          Role: <span>{{ detail?.roleId | roleDisplay }}</span>
         </mat-label>
-        <mat-label>Level: {{ detail.level }}</mat-label>
-        <mat-label>Exp: {{ detail.exp }}</mat-label>
+        <mat-label>Level: {{ detail?.level }}</mat-label>
+        <mat-label>Exp: {{ detail?.exp }}</mat-label>
         <mat-progress-bar
           mode="determinate"
           color="primary"
-          [value]="detail.exp"
+          [value]="detail?.exp"
           [bufferValue]="100"
-          [matTooltip]="detail.exp + '/100'"
+          [matTooltip]="detail?.exp + '/100'"
         ></mat-progress-bar>
         <mat-label>Hp: {{ caculator.hpCalculator(detail) }} </mat-label>
         <mat-label>Mp: {{ caculator.mpCalculator(detail) }} </mat-label>
         <mat-label
           >Stamina: {{ caculator.staminaCalculator(detail) }}
         </mat-label>
-        <mat-label>Str: {{ detail.str }}</mat-label>
-        <mat-label>Int: {{ detail.int }}</mat-label>
-        <mat-label>Agi: {{ detail.agi }}</mat-label>
-        <mat-label>Vit: {{ detail.vit }}</mat-label>
-        <mat-label>Luck: {{ detail.luck }}</mat-label>
+        <mat-label>Str: {{ detail?.str }}</mat-label>
+        <mat-label>Int: {{ detail?.int }}</mat-label>
+        <mat-label>Agi: {{ detail?.agi }}</mat-label>
+        <mat-label>Vit: {{ detail?.vit }}</mat-label>
+        <mat-label>Luck: {{ detail?.luck }}</mat-label>
       </div>
       <div id="chart">
         <apx-chart

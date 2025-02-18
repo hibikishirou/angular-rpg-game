@@ -81,14 +81,14 @@ export class CharacterService implements OnDestroy {
     if (id) {
       return this.indexDbService.updateDb(CharacterStoreName, character).pipe(
         switchMap(() => {
-          this.character$.next(character);
+          this.getCharacterList();
           return of(true);
         })
       );
     } else {
       return this.indexDbService.addDb(CharacterStoreName, character).pipe(
         switchMap(() => {
-          this.character$.next(character);
+          this.getCharacterList();
           return of(true);
         })
       );

@@ -1,24 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  ViewChild,
+} from '@angular/core';
 import { CharacterWindowComponent } from '../character/character-window/character-window.component';
 import { DestroyComponent } from '../../core/destroy/destroy.component';
-import {
-  exhaustMap,
-  finalize,
-  fromEvent,
-  map,
-  merge,
-  of,
-  Subject,
-  takeUntil,
-  tap,
-} from 'rxjs';
+import { exhaustMap, fromEvent, map, of, Subject, takeUntil, tap } from 'rxjs';
 import { CharacterService } from '../../redux/character.service';
 import { MapService } from '../../redux/map.service';
-
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MessageService } from '../../redux/message.service';
 @Component({
   selector: 'app-map',
-  imports: [CommonModule, CharacterWindowComponent],
+  imports: [CommonModule, CharacterWindowComponent, MatSnackBarModule],
   templateUrl: './map.component.html',
   styleUrl: './map.component.scss',
 })
@@ -26,8 +23,9 @@ export class MapComponent extends DestroyComponent implements AfterViewInit {
   @ViewChild('map') map?: ElementRef;
   private eventListener$: Subject<any> = new Subject();
   constructor(
-    private readonly characterService: CharacterService,
-    private readonly mapService: MapService
+    private readonly characterService$: CharacterService,
+    private readonly mapService$: MapService,
+    private readonly messageService$: MessageService
   ) {
     super();
     this.initMapEvent();
@@ -62,18 +60,19 @@ export class MapComponent extends DestroyComponent implements AfterViewInit {
           );
         }),
         tap(() => {
-          this.mapService.statChange('stamina', -10);
+          this.mapService$.statChange('stamina', -10);
         })
       )
       .subscribe({
         next: (value) => {
+          console.log(value);
           switch (value) {
             case 'see_monster': {
               this.seeMonster();
               break;
             }
             case 'see_item': {
-              this.seeMonster();
+              this.seeItem();
               break;
             }
             default: {
@@ -86,22 +85,19 @@ export class MapComponent extends DestroyComponent implements AfterViewInit {
   }
 
   seeMonster() {
-    this.mapService.statChange('hp', -10);
-    this.characterService.receiveExp(
-      this.characterService.randomStat(10, 20)
-    );
+    const random = this.characterService$.randomStat(10, 20);
+    const exp = this.characterService$.randomStat(10, 20);
+    this.mapService$.statChange('hp', -1 * random);
+    this.characterService$.receiveExp(exp);
+    this.messageService$.showMessage(`You see the monster, lost ${random}hp, take ${exp}exp`);
   }
 
   seeItem() {
-    this.mapService.statChange('hp', 10);
-    // this.characterService.receiveExp(
-    //   this.characterService.randomStat(10, 20)
-    // );
+    this.mapService$.statChange('hp', 10);
+    this.messageService$.showMessage('You see the potion, cure 10hp');
   }
 
   seeNothing() {
-    // this.characterService.receiveExp(
-    //   this.characterService.randomStat(10, 20)
-    // );
+    this.messageService$.showMessage('Nothing happen');
   }
 }

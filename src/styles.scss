@@ -1,9 +1,10 @@
 @import "tailwindcss";
+@import "ngx-toastr/toastr";
 /* You can add global styles to this file, and also import other style files */
 
 html,
 body {
-  background-color: black;
+  background-color: var(--mat-sys-primary);
   height: 100%;
 }
 body {

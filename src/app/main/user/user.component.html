@@ -1,18 +1,20 @@
-<div *ngIf="isLogin; else loginForm">
-  <mat-card class="w-100 flex justify-center p-4">
-    <mat-card-title class="text-center pb-6"> User</mat-card-title>
-    <mat-card-content>
-      <mat-label>Username:</mat-label>
-      <mat-label>{{ user?.username }}</mat-label>
-    </mat-card-content>
-    <mat-card-footer>
-      <div class="flex flex-row gap-6 justify-center">
-        <button type="primary" mat-raised-button (click)="logout()">
-          Logout
-        </button>
-      </div>
-    </mat-card-footer>
-  </mat-card>
+<div class="container flex justify-center items-center w-full h-full m-auto">
+  <div *ngIf="isLogin; else loginForm">
+    <mat-card class="w-100 flex justify-center p-4">
+      <mat-card-title class="text-center pb-6"> User</mat-card-title>
+      <mat-card-content>
+        <mat-label>Username:</mat-label>
+        <mat-label>{{ user?.username }}</mat-label>
+      </mat-card-content>
+      <mat-card-footer>
+        <div class="flex flex-row gap-6 justify-center">
+          <button type="primary" mat-raised-button (click)="logout()">
+            Logout
+          </button>
+        </div>
+      </mat-card-footer>
+    </mat-card>
+  </div>
 </div>
 <ng-template #loginForm>
   <form *ngIf="!isRegister; else registerForm" [formGroup]="userForm">

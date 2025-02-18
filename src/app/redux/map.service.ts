@@ -127,7 +127,15 @@ export class MapService implements OnDestroy {
         if (!character) {
           return;
         }
+        const maxStat = character[
+          `max${
+            String(type).charAt(0).toUpperCase() + String(type).slice(1)
+          }` as keyof MapCharacter
+        ] as number;
         const newStat = character[type] + value;
+        if (newStat > maxStat) {
+          return;
+        }
         if (newStat > 0) {
           this.character$.next({
             ...character,

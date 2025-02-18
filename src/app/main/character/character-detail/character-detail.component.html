@@ -10,13 +10,6 @@
         </mat-label>
         <mat-label>Level: {{ detail?.level }}</mat-label>
         <mat-label>Exp: {{ detail?.exp }}</mat-label>
-        <mat-progress-bar
-          mode="determinate"
-          color="primary"
-          [value]="detail?.exp"
-          [bufferValue]="100"
-          [matTooltip]="detail?.exp + '/100'"
-        ></mat-progress-bar>
         <mat-label>Hp: {{ caculator.hpCalculator(detail) }} </mat-label>
         <mat-label>Mp: {{ caculator.mpCalculator(detail) }} </mat-label>
         <mat-label

@@ -11,6 +11,14 @@ export class MessageService {
   constructor(private toastrService: ToastrService) {}
 
   showMessage(message: string) {
-    this.toastrService.info(message, '');
+    this.toastrService.info(message);
+  }
+
+  showSuccess(message: string) {
+    this.toastrService.success(message);
+  }
+
+  showError(message: string) {
+    this.toastrService.error(message);
   }
 }

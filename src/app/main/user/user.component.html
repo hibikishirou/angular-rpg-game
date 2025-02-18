@@ -1,37 +1,39 @@
 <div class="container flex justify-center items-center w-full h-full m-auto">
-  <div *ngIf="isLogin; else loginForm">
-    <mat-card class="w-100 flex justify-center p-4">
-      <mat-card-title class="text-center pb-6"> User</mat-card-title>
-      <mat-card-content>
-        <mat-label>Username:</mat-label>
-        <mat-label>{{ user?.username }}</mat-label>
-      </mat-card-content>
-      <mat-card-footer>
-        <div class="flex flex-row gap-6 justify-center">
-          <button type="primary" mat-raised-button (click)="logout()">
-            Logout
-          </button>
-        </div>
-      </mat-card-footer>
-    </mat-card>
-  </div>
-</div>
-<ng-template #loginForm>
-  <form *ngIf="!isRegister; else registerForm" [formGroup]="userForm">
+  @if(isLogin) {
+  <mat-card class="w-100 flex justify-center p-4">
+    <mat-card-title class="text-center pb-6"> User</mat-card-title>
+    <mat-card-content>
+      <div class="p-4">
+        <span>Username:</span>
+        <span>{{ user?.username }}</span>
+      </div>
+    </mat-card-content>
+    <mat-card-footer>
+      <div class="flex flex-row gap-6 justify-center">
+        <button type="primary" mat-raised-button (click)="logout()">
+          Logout
+        </button>
+      </div>
+    </mat-card-footer>
+  </mat-card>
+  } @else if (!isRegister) {
+  <form [formGroup]="userForm">
     <mat-card class="w-100 flex justify-center p-4">
       <mat-card-title class="text-center pb-6"> Login </mat-card-title>
       <mat-card-content>
         <div class="flex flex-col gap-4">
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
             <input matInput formControlName="username" />
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" type="password" />
           </mat-form-field>
         </div>
-        <mat-error *ngIf="error">{{ error }}</mat-error>
+        @if(error) {
+        <mat-error>{{ error }}</mat-error>
+        }
       </mat-card-content>
       <mat-card-footer>
         <div class="flex flex-row gap-6 justify-center">
@@ -50,28 +52,28 @@
       </mat-card-footer>
     </mat-card>
   </form>
-</ng-template>
-
-<ng-template #registerForm>
+  } @else {
   <form [formGroup]="userRegisterForm">
     <mat-card class="w-100 flex justify-center p-4">
       <mat-card-title class="text-center pb-6"> Login </mat-card-title>
       <mat-card-content>
         <div class="flex flex-col gap-4">
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Username</mat-label>
             <input matInput formControlName="username" />
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Password</mat-label>
             <input matInput formControlName="password" type="password" />
           </mat-form-field>
-          <mat-form-field>
+          <mat-form-field appearance="outline">
             <mat-label>Verifty Password</mat-label>
             <input matInput formControlName="verifyPassword" type="password" />
           </mat-form-field>
         </div>
-        <mat-error *ngIf="error">{{ error }}</mat-error>
+        @if(error) {
+        <mat-error>{{ error }}</mat-error>
+        }
       </mat-card-content>
       <mat-card-footer>
         <div class="flex flex-row gap-6 justify-center">
@@ -90,4 +92,5 @@
       </mat-card-footer>
     </mat-card>
   </form>
-</ng-template>
+  }
+</div>

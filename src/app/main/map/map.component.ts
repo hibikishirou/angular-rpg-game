@@ -93,8 +93,8 @@ export class MapComponent extends DestroyComponent implements AfterViewInit {
   }
 
   seeItem() {
-    this.mapService$.statChange('hp', 10);
-    this.messageService$.showMessage('You see the potion, cure 10hp');
+    this.mapService$.statChange('hp', 20);
+    this.messageService$.showMessage('You see the potion, cure 20hp');
   }
 
   seeNothing() {

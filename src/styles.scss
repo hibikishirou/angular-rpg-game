@@ -1,5 +1,7 @@
-@import "tailwindcss";
-@import "ngx-toastr/toastr";
+@use "ngx-toastr/toastr";
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
 /* You can add global styles to this file, and also import other style files */
 
 html,

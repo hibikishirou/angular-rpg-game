@@ -134,6 +134,10 @@ export class MapService implements OnDestroy {
         ] as number;
         const newStat = character[type] + value;
         if (newStat > maxStat) {
+          this.character$.next({
+            ...character,
+            [type]: maxStat,
+          });
           return;
         }
         if (newStat > 0) {
@@ -141,12 +145,12 @@ export class MapService implements OnDestroy {
             ...character,
             [type]: newStat,
           });
-        } else {
-          this.character$.next({
-            ...character,
-            [type]: 0,
-          });
+          return;
         }
+        this.character$.next({
+          ...character,
+          [type]: 0,
+        });
       },
     });
   }

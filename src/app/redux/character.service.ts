@@ -137,7 +137,6 @@ export class CharacterService implements OnDestroy {
   receiveExp(exp: number) {
     this.character$.pipe(take(1)).subscribe((character) => {
       if (!character) {
-        console.log('not found character');
         return;
       }
       const { exp: charExp = 0, roleId = 1 } = character as Character;
@@ -151,7 +150,6 @@ export class CharacterService implements OnDestroy {
       } else {
         const newStat = this.randomLevel(roleId);
         if (!newStat) {
-          console.log('error level up');
           return;
         }
         const {

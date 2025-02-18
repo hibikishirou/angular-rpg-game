@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { DestroyComponent } from '../../core/destroy/destroy.component';
 import { CharacterService } from '../../redux/character.service';
-import { UserService } from '../../redux/user.service';
 import { take, takeUntil } from 'rxjs';
 import { Character } from '../../model/Character';
 import {
@@ -34,8 +33,8 @@ import { Router } from '@angular/router';
   styleUrl: './character.component.scss',
 })
 export class CharacterComponent extends DestroyComponent {
-  currentCharacter: Character | null = null;
-  tempCharacter: Character | null = null;
+  currentCharacter: Character | Partial<Character> = {};
+  tempCharacter: Character | Partial<Character> = {};
   nameControl: FormControl = new FormControl('', [Validators.required]);
   constructor(
     private readonly characterService: CharacterService,
@@ -51,7 +50,7 @@ export class CharacterComponent extends DestroyComponent {
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (character) => {
-          this.currentCharacter = character;
+          this.currentCharacter = character as Character;
         },
       });
   }
@@ -67,7 +66,7 @@ export class CharacterComponent extends DestroyComponent {
   saveCharacter() {
     if (this.tempCharacter) {
       this.characterService
-        .saveCharacter(this.tempCharacter)
+        .saveCharacter(this.tempCharacter as Character)
         .pipe(take(1))
         .subscribe({
           next: (result) => {},
@@ -79,7 +78,7 @@ export class CharacterComponent extends DestroyComponent {
       return;
     }
     this.characterService
-      .deleteCharacter(this.currentCharacter)
+      .deleteCharacter(this.currentCharacter as Character)
       .pipe(take(1))
       .subscribe({
         next: (result) => {},

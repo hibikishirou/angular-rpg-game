@@ -3,14 +3,9 @@ import { UserService } from './user.service';
 import {
   BehaviorSubject,
   combineLatest,
-  concatAll,
-  forkJoin,
   map,
-  merge,
-  ReplaySubject,
   skip,
   Subject,
-  switchAll,
   takeUntil,
 } from 'rxjs';
 import { CharacterService } from './character.service';

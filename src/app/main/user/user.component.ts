@@ -9,6 +9,7 @@ import { CommonModule } from '@angular/common';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-user',
   imports: [
@@ -36,7 +37,7 @@ export class UserComponent extends DestroyComponent {
     password: new FormControl(),
     verifyPassword: new FormControl(),
   });
-  constructor(private readonly userSerive: UserService) {
+  constructor(private readonly userSerive: UserService, private router: Router) {
     super();
     this.checkLogin();
     this.checkError();
@@ -82,6 +83,7 @@ export class UserComponent extends DestroyComponent {
       next: (result) => {
         if (result) {
           this.userForm.reset();
+          this.router.navigate(['/character']);
         }
       },
       error: (err) => {},

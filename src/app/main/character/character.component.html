@@ -1,7 +1,12 @@
 <mat-card class="w-full flex justify-center p-4">
   <mat-card-title class="text-center pb-6"> Character </mat-card-title>
   <mat-card-content>
-    <div *ngIf="currentCharacter; else createNewCharaterForm">
+    <div
+      *ngIf="
+        currentCharacter && currentCharacter.id;
+        else createNewCharaterForm
+      "
+    >
       <app-character-detail [detail]="currentCharacter"></app-character-detail>
       <div class="flex flex-row justify-center p-4 gap-4">
         <button mat-flat-button (click)="playCharacter()">
@@ -12,29 +17,23 @@
         </button>
       </div>
     </div>
-    <ng-template #createNewCharaterForm>
-      <form class="flex flex-row gap-6 justify-center items-baseline">
-        <mat-form-field>
-          <mat-label>Character Name</mat-label>
-          <input matInput [formControl]="nameControl" />
-          <mat-error *ngIf="nameControl.invalid">Invalid name</mat-error>
-        </mat-form-field>
-        <button mat-flat-button (click)="createCharater()">
-          Create Character
-        </button>
-      </form>
-      <app-character-detail
-        *ngIf="tempCharacter"
-        [detail]="tempCharacter"
-      ></app-character-detail>
-      <div *ngIf="tempCharacter" class="flex flex-row justify-center p-4">
-        <button mat-flat-button (click)="saveCharacter()">
-          Save Character
-        </button>
-      </div>
-    </ng-template>
   </mat-card-content>
   <mat-card-footer> </mat-card-footer>
 </mat-card>
 
-<ng-template></ng-template>
+<ng-template #createNewCharaterForm>
+  <form class="flex flex-row gap-6 justify-center items-baseline">
+    <mat-form-field>
+      <mat-label>Character Name</mat-label>
+      <input matInput [formControl]="nameControl" />
+      <mat-error *ngIf="nameControl.invalid">Invalid name</mat-error>
+    </mat-form-field>
+    <button mat-flat-button (click)="createCharater()">Create Character</button>
+  </form>
+  <div *ngIf="tempCharacter && tempCharacter.userId">
+    <app-character-detail [detail]="tempCharacter"></app-character-detail>
+    <div class="flex flex-row justify-center p-4">
+      <button mat-flat-button (click)="saveCharacter()">Save Character</button>
+    </div>
+  </div>
+</ng-template>

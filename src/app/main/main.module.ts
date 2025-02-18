@@ -14,9 +14,9 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path: 'map',
-        component: MapComponent,
-        canActivate: [AuthGuard, CharacterGuard],
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'map'
       },
       {
         path: 'user',
@@ -27,8 +27,17 @@ const routes: Routes = [
         component: CharacterComponent,
         canActivate: [AuthGuard],
       },
+      {
+        path: 'map',
+        component: MapComponent,
+        canActivate: [AuthGuard, CharacterGuard],
+      }
     ],
   },
+  {
+    path: '**',
+    redirectTo: ''
+  }
 ];
 
 @NgModule({

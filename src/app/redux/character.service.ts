@@ -24,8 +24,8 @@ const CharacterStoreName = 'character';
 })
 export class CharacterService implements OnDestroy {
   private currentUser?: DisplayUser | null;
-  private readonly character$: BehaviorSubject<Character | null> =
-    new BehaviorSubject<Character | null>(null);
+  private readonly character$: BehaviorSubject<Partial<Character> | Character> =
+    new BehaviorSubject<Partial<Character> | Character>({});
   private readonly destroy$ = new Subject();
   private readonly levelUpStat$: BehaviorSubject<Stat> =
     new BehaviorSubject<Stat>({ str: 0, int: 0, vit: 0, agi: 0, luck: 0 });
@@ -50,20 +50,6 @@ export class CharacterService implements OnDestroy {
           this.currentUser = user;
           this.getCharacterList();
         },
-      });
-    this.character$
-      .pipe(
-        takeUntil(this.destroy$),
-        distinctUntilChanged(),
-        switchMap((character) => {
-          if (character) {
-            return this.saveCharacter(character);
-          }
-          return of(null);
-        })
-      )
-      .subscribe({
-        next: (result) => {},
       });
   }
 
@@ -94,14 +80,16 @@ export class CharacterService implements OnDestroy {
     }
     if (id) {
       return this.indexDbService.updateDb(CharacterStoreName, character).pipe(
-        tap(() => {
+        switchMap(() => {
           this.character$.next(character);
+          return of(true);
         })
       );
     } else {
       return this.indexDbService.addDb(CharacterStoreName, character).pipe(
-        tap(() => {
+        switchMap(() => {
           this.character$.next(character);
+          return of(true);
         })
       );
     }
@@ -117,7 +105,7 @@ export class CharacterService implements OnDestroy {
         take(1),
         switchMap((result) => {
           if (result) {
-            this.character$.next(null);
+            this.character$.next({});
             return of(true);
           }
           return throwError('Can not delete character');
@@ -152,28 +140,41 @@ export class CharacterService implements OnDestroy {
         console.log('not found character');
         return;
       }
-      const { exp: charExp, roleId } = character;
+      const { exp: charExp = 0, roleId = 1 } = character as Character;
       if (charExp + exp < 100) {
-        this.character$.next({
-          ...character,
+        this.saveCharacter({
+          ...(character as Character),
           exp: charExp + exp,
-        });
+        })
+          .pipe(take(1))
+          .subscribe({ next: (result) => {} });
       } else {
         const newStat = this.randomLevel(roleId);
         if (!newStat) {
           console.log('error level up');
           return;
         }
-        this.character$.next({
-          ...character,
-          level: character.level + 1,
+        const {
+          level = 0,
+          str = 0,
+          int = 0,
+          agi = 0,
+          vit = 0,
+          luck = 0,
+        } = character;
+
+        this.saveCharacter({
+          ...(character as Character),
+          level: level + 1,
           exp: 0,
-          str: character.str + newStat.str,
-          int: character.int + newStat.int,
-          agi: character.agi + newStat.agi,
-          vit: character.vit + newStat.vit,
-          luck: character.luck + newStat.luck,
-        });
+          str: str + newStat.str,
+          int: int + newStat.int,
+          agi: agi + newStat.agi,
+          vit: vit + newStat.vit,
+          luck: luck + newStat.luck,
+        })
+          .pipe(take(1))
+          .subscribe({ next: (result) => {} });
         this.levelUpStat$.next(newStat);
       }
     });

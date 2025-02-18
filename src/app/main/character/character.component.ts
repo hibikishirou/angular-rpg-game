@@ -64,17 +64,18 @@ export class CharacterComponent extends DestroyComponent {
   }
 
   saveCharacter() {
-    if (this.tempCharacter) {
-      this.characterService
-        .saveCharacter(this.tempCharacter as Character)
-        .pipe(take(1))
-        .subscribe({
-          next: (result) => {},
-        });
+    if (!this.tempCharacter || !this.tempCharacter.userId) {
+      return;
     }
+    this.characterService
+      .saveCharacter(this.tempCharacter as Character)
+      .pipe(take(1))
+      .subscribe({
+        next: (result) => {},
+      });
   }
   deleteCharacter() {
-    if (!this.currentCharacter) {
+    if (!this.currentCharacter || !this.currentCharacter.id) {
       return;
     }
     this.characterService

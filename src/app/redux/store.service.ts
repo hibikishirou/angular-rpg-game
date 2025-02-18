@@ -29,9 +29,8 @@ export class StoreService implements OnDestroy {
     const storeData = localStorage.getItem('store');
     const store = storeData ? JSON.parse(storeData) : {};
     this.store$.next(store);
-    const { user, character } = store;
+    const { user } = store;
     this.userService.saveUser(user);
-    this.characterService.saveCharacter(character);
   }
   handleStore() {
     this.store$.pipe(skip(1), takeUntil(this.destroy$)).subscribe({

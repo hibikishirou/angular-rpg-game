@@ -95,6 +95,14 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "angular-cli-ghpages:deploy",
+          "options": {
+            "baseHref": "https://hibikishirou.github.io/angular-rpg-game/",
+            "name": "Hibiki Shirou",
+            "email": "hibikishirou@gmail.com"
+          }
         }
       }
     }
